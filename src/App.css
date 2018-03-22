@@ -1,0 +1,28 @@
+body{
+    margin : 0;
+    padding : 0;
+}
+
+.heading{
+    width : 100%;
+    font-size : 1.5em;
+    text-align: center;
+}
+
+.search{
+    width: 100%;
+    height : 10vh;
+}
+
+.search-input{
+    margin: 3% 16%;
+    width: 60%;
+    padding: 1% 1% 1% 6%;
+    background: white url('https://cdn1.iconfinder.com/data/icons/hawcons/32/698627-icon-111-search-256.png') left no-repeat;
+    background-size: auto 100%;
+    border-style: groove;
+}
+
+.search-input:focus{
+    outline-color: rgb(66, 94, 250);
+}
