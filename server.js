@@ -17,7 +17,6 @@ app.get('/weather', function (req, res) {
       return res.send(err);
     }
     if (response) {
-      //var data = JSON.parse(response);
       res.send(response.body);
     }
   })

@@ -12,10 +12,13 @@ body{
 .search{
     width: 100%;
     height : 10vh;
+    margin-bottom: 3%;
+    display: flex;
+    align-items: center;
 }
 
 .search-input{
-    margin: 3% 16%;
+    margin-left: 16%;
     width: 60%;
     padding: 1% 1% 1% 6%;
     background: white url('https://cdn1.iconfinder.com/data/icons/hawcons/32/698627-icon-111-search-256.png') left no-repeat;
@@ -25,4 +28,69 @@ body{
 
 .search-input:focus{
     outline-color: rgb(66, 94, 250);
+}
+
+.btn{
+    padding: 1%;
+    background-color: aliceblue;
+    margin-left: 1%;
+}
+
+.btn:hover{
+    cursor: pointer;
+    box-shadow: 1px 1px 2px 0px black;
+}
+.nav-bar{
+    width: 60%;
+    margin: 3% auto 0;
+    display: flex;
+    justify-content: space-around;
+}
+
+.nav-bar-elm{
+    width: 50%;
+    padding: .5em;
+    font-size: 1.5em;
+    text-align: center;
+    background: #c5d5cb;
+    border-radius: 8px 0;
+}
+
+.nav-bar-elm:hover{
+    background-color: rgb(66, 94, 250);
+    color: white;
+    cursor: pointer;
+}
+
+.weather-info{
+    width: 60%;
+    margin: 0 auto;
+    height: 50vh;
+    background-color: aliceblue;
+}
+
+.city-info{
+    width: 60%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.city{
+    font-size: 1.5em;
+}
+
+.weather-type{
+    display: flex;
+    align-items: center;
+}
+
+.weather, .temp{
+    margin-left: 2%;
+    font-size: 1.5em;
+}
+
+.weather-img{
+    margin-left: 5%;
 }
