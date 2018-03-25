@@ -5,10 +5,22 @@ body{
 
 .heading{
     width : 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-size : 1.5em;
+    font-family: 'Berkshire Swash', cursive;
     text-align: center;
 }
 
+.heading-logo{
+   width: 50px;
+   height: 50px;
+   background-image: url('https://lh3.googleusercontent.com/zKUUdFaxZsaWC45fbOzb3RiA0xDMEIaERyH5y2BBRQoY-1BBdO9QGNAZpJITH9m8sfE=w300');
+   background-position: center;
+   background-size: 100%;
+   background-repeat: no-repeat;
+}
 .search{
     width: 100%;
     height : 10vh;
@@ -20,20 +32,36 @@ body{
 .search-input{
     margin-left: 16%;
     width: 60%;
-    padding: 1% 1% 1% 6%;
+    padding: .7% 1% .7% 6%;
     background: white url('https://cdn1.iconfinder.com/data/icons/hawcons/32/698627-icon-111-search-256.png') left no-repeat;
     background-size: auto 100%;
+    font-family: Itim, cursive;
+    font-size: 16px;
     border-style: groove;
 }
 
 .search-input:focus{
-    outline-color: rgb(66, 94, 250);
+    outline-color: #5c007a;
+}
+
+.suggestion-load{
+    position: absolute;
+    top: 12%;
+    width: 35px;
+    height: 5%;
+    background-image: url('https://i.pinimg.com/originals/58/4b/60/584b607f5c2ff075429dc0e7b8d142ef.gif');
+    left: 48%;
+    background-size: auto 100%;
+    background-repeat: no-repeat;
 }
 
 .btn{
     padding: 1%;
-    background-color: aliceblue;
+    background-color: #5c007a;
     margin-left: 1%;
+    color: #ffffff;
+    font-family: Itim, cursive;
+    font-size: 15px;
 }
 
 .btn:hover{
@@ -50,47 +78,129 @@ body{
 .nav-bar-elm{
     width: 50%;
     padding: .5em;
-    font-size: 1.5em;
+    font-family: 'Berkshire Swash', cursive;
     text-align: center;
-    background: #c5d5cb;
-    border-radius: 8px 0;
+    background-color: #0077c2;
+    color: #ffffff;
+    border-radius: 8px;
 }
 
 .nav-bar-elm:hover{
-    background-color: rgb(66, 94, 250);
-    color: white;
     cursor: pointer;
+}
+
+.selected-tab{
+    box-shadow: inset 1px 1px 8px 1px #ffffff;
+}
+.loading{
+    height: 25%;
+    width: 25%;
+    margin: 0 auto;
+    background-image: url('https://media1.kobi5.com/wp-content/custom/DEQ/sun_loader.gif');
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .weather-info{
     width: 60%;
+    height: 80vh;
     margin: 0 auto;
-    height: 50vh;
-    background-color: aliceblue;
+    margin-bottom: 10%;
+    font-family: 'Merriweather Sans',sans-serif;
 }
 
 .city-info{
     width: 60%;
     margin: 0 auto;
+    font-family: Itim, cursive;
     display: flex;
     justify-content: space-around;
     align-items: center;
 }
 
-.city{
-    font-size: 1.5em;
+.current-weather-wrapper{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 5px;
+    padding: 5px;
 }
-
-.weather-type{
+.wrapper-small{
+    grid-column: 1;
+    grid-row: 1/3;
     display: flex;
-    align-items: center;
+    align-items: flex-end;
+    font-size: 1.4em;
+    border-radius: 5px;
+    border: 1px solid #00d9ff;
+}
+.val{
+    font-size: 36px;
+    color: #666;
+}
+.temp{
+  grid-row: 1;
+  grid-column: 2;
+  border-radius: 5px;
+  border: 1px solid #00d9ff;
+  font-size: 13px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  padding: 5px 0;
+  color: #888;
 }
 
-.weather, .temp{
-    margin-left: 2%;
-    font-size: 1.5em;
+.humidity{
+    grid-row: 2;
+    grid-column: 2;
+    border-radius: 5px;
+    border: 1px solid #00d9ff;
+    font-size: 13px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
+    padding: 5px 0;
+    color: #888;
 }
-
 .weather-img{
     margin-left: 5%;
+    width: 100px;
+}
+
+.forecast-weather-img{
+    margin-left: 5%;
+    width: 70px;
+}
+
+.forecast-wrapper{
+  padding: 2% 0;
+  box-shadow: 1px 1px 5px 0px #7b9679;
+}
+
+.forecast-day{
+  text-align: center;
+}
+.week-day, .month, .date, .year{
+  margin-left:2%;
+  font-size: 1em;
+}
+
+.forecast-type{
+  width: 55%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+}
+.forecast-weather{
+  margin-left: 8%;
+}
+
+.forecast-temp{
+   text-align: center;
+}
+
+.forecast-humidity{
+  text-align: center;
+  padding-top: 2%;
 }
