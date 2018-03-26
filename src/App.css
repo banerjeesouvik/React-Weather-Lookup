@@ -76,7 +76,7 @@ body{
 }
 
 .nav-bar-elm{
-    width: 50%;
+    width: 35%;
     padding: .5em;
     font-family: 'Berkshire Swash', cursive;
     text-align: center;
@@ -90,11 +90,12 @@ body{
 }
 
 .selected-tab{
+    width: 65%;
     box-shadow: inset 1px 1px 8px 1px #ffffff;
 }
 .loading{
-    height: 25%;
-    width: 25%;
+    height: 150px;
+    width: 150px;
     margin: 0 auto;
     background-image: url('https://media1.kobi5.com/wp-content/custom/DEQ/sun_loader.gif');
     background-size: 100%;
@@ -128,11 +129,14 @@ body{
 .wrapper-small{
     grid-column: 1;
     grid-row: 1/3;
-    display: flex;
-    align-items: flex-end;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     font-size: 1.4em;
     border-radius: 5px;
     border: 1px solid #00d9ff;
+}
+.weather{
+    text-align: center;
 }
 .val{
     font-size: 36px;
@@ -164,43 +168,105 @@ body{
     color: #888;
 }
 .weather-img{
-    margin-left: 5%;
+    grid-column: 1;
+    grid-row: 1/3;
+    margin: 3% auto 0;
     width: 100px;
 }
-
+.weather-date{
+    color: cadetblue;
+    font-size: 20px;
+    padding: 6px;
+}
 .forecast-weather-img{
-    margin-left: 5%;
-    width: 70px;
+    width: 80px;
 }
 
 .forecast-wrapper{
   padding: 2% 0;
+  display: grid;
+  grid-template-columns: 2fr 3fr;
   box-shadow: 1px 1px 5px 0px #7b9679;
 }
 
 .forecast-day{
-  text-align: center;
+    margin-left: 8%;
 }
 .week-day, .month, .date, .year{
   margin-left:2%;
   font-size: 1em;
+  color: cadetblue;
 }
 
 .forecast-type{
-  width: 55%;
-  margin: 0 auto;
+  grid-column: 2;
+  grid-row: 1/3;
   display: flex;
   align-items: center;
+  justify-content: space-around;
 }
 .forecast-weather{
-  margin-left: 8%;
+    font-size: 20px;
+    color: #666;
 }
-
 .forecast-temp{
-   text-align: center;
+   font-size: 13px;
+   color: #888;
+   margin-left: 8%;
 }
 
 .forecast-humidity{
-  text-align: center;
   padding-top: 2%;
+  font-size: 13px;
+  color: #888;
+  margin-left: 10%;
+}
+
+.forecast-txt-wrapper{
+    grid-column: 2;
+    grid-row: 3;
+    font-size: 12px;
+    padding: 0 2px;
+    color: #555;
+}
+.txt{
+    padding: 2px 0;
+}
+
+.map{
+    margin-top: 5%;
+}
+
+.inline-elm{
+    display: inline-flex;
+    align-items: center;
+    color : #555;
+}
+.temp-icon{
+    height: 14px;
+    width: 14px;
+    margin-right: 5px;
+    background-image: url('https://cdn4.iconfinder.com/data/icons/weather-conditions/512/hot_temperature-512.png');
+    background-size: auto 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.humidity-icon{
+    height: 14px;
+    width: 14px;
+    margin-right: 5px;
+    background-image: url('https://cdn.iconscout.com/public/images/icon/free/png-512/humidity-forecast-hydration-precipitation-temperature-weather-3a64e557720613a1-512x512.png');
+    background-size: auto 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.location-icon{
+    height: 14px;
+    width: 14px;
+    margin-right: 5px;
+    background-image: url('https://png.pngtree.com/element_pic/16/12/02/51e6452ca365f618ab4b723c7aa18be9.jpg');
+    background-size: auto 100%;
+    background-position: center;
+    background-repeat: no-repeat;
 }

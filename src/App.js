@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactMapboxGl, { Layer, Feature, Popup } from "react-mapbox-gl";
 import './App.css';
 
 class App extends Component {
@@ -10,10 +11,14 @@ class App extends Component {
       lon : 77.589996,
     }
     this.update = this.update.bind(this)
+    this.updateLngLat = this.updateLngLat.bind(this);
   }
   update(cityInfo){
     //console.log('triggered with', cityName)
     this.setState({city:cityInfo.name, lat : cityInfo.lat, lon : cityInfo.lon, day : 'today'});
+  }
+  updateLngLat(lngLat){
+    console.log('app received',lngLat);
   }
 
   render() {
@@ -22,7 +27,7 @@ class App extends Component {
       <div>
         <Header />
         <Search updateParent={this.update}/>
-        <Weather city={this.state}/>
+        <Weather city={this.state} updateCordt = {this.updateLngLat}/>
       </div>
     );
   }
@@ -64,7 +69,7 @@ class Search extends Component {
     }
   }
   sendCity = () => {
-    console.log(this.state.result)
+    //console.log(this.state.result)
     let cityInfo = this.state.result.map(function(city){
       return {
         name : city.name,
@@ -72,11 +77,11 @@ class Search extends Component {
         lon : city.lon
       }
     });
-    console.log(cityInfo)
+    //console.log(cityInfo)
     cityInfo = cityInfo.find(city => {
       return city.name === this.state.city;
     });
-    console.log(cityInfo);
+    //console.log(cityInfo);
     if(cityInfo !== undefined){
       this.props.updateParent(cityInfo);
     }
@@ -144,6 +149,7 @@ class Weather extends Component {
       day : 'today'
     }
     this.updateDay = this.updateDay.bind(this);
+    this.updateCoordinate = this.updateCoordinate.bind(this);
   }
   updateDay(val){
     this.setState({day : val});
@@ -172,21 +178,41 @@ class Weather extends Component {
         fetch(`http://api.wunderground.com/api/3b051654317f7634/forecast/q/${this.props.city.lat},${this.props.city.lon}.json`)
           .then(response => response.json())
           .then(forecast => {
+            //console.log(forecast);
             this.setState({weatherInfo : weatherInfo, forecast : forecast, isDataFetched : true})
           })
       })
   }
-
+  updateCoordinate(map, event){
+    console.log('weather received', event.lngLat);
+    this.props.updateCordt(event.lngLat);
+  }
   render(){
     let weather = this.state.weatherInfo;
     let forecast = this.state.forecast;
     //console.log(forecast)
+    let forecast_text = [];
+    if(this.state.isDataFetched){
+      let temp_forecast = forecast.forecast.txt_forecast.forecastday.slice(2,8).map((val) => {
+        return val.fcttext_metric;
+      });
+      //console.log(temp_forecast);
+      let tmp = [];
+      for(let i = 0; i < temp_forecast.length;){
+        tmp.push(temp_forecast.slice(i,i+2));
+        i= i+2;
+      }
+      forecast_text = tmp;
+      //console.log(tmp);
+    }
     let display;
     if(this.state.day === 'today'){
-      display = <Today weather = {weather} />;
+      display = <Today weather = {weather} updateCordt={this.updateCoordinate}/>;
     }else if(this.state.day === 'forecast'){
+      let i = -1;
       display = forecast.forecast.simpleforecast.forecastday.slice(1,4).map((forcst) => {
-        return <Forecast key = {forcst.date.weekday} forecast = {forcst} />;
+        i++;
+        return <Forecast key = {forcst.date.weekday} forecast = {forcst} forecast_txt = {forecast_text[i]}/>;
       });
     }
     if(this.state.isDataFetched) {
@@ -213,20 +239,59 @@ class Weather extends Component {
   }
 }
 
+const Map = ReactMapboxGl({
+  accessToken: "pk.eyJ1IjoiYmFuZXJqZWVzb3V2aWsiLCJhIjoiY2pmODB0ZWpwMGM0ZTJ3b2I4dDRrem1sNCJ9._ZHH4GBFaC44wMRgX7gXvA",
+  injectCSS : false
+});
+
 const Today = (props) => {
-  return (
-    <div className='current-weather-wrapper'>
-      <div className='wrapper-small'>
-        <img className='weather-img' src={props.weather.current_observation.icon_url} alt={props.weather.current_observation.icon}></img>
-        <div className='weather'><span className='val'>{props.weather.current_observation.weather}</span></div>
+    let date = props.weather.current_observation.observation_time_rfc822.split(' ').slice(0, 3).join(' ');
+    let loc = props.weather.current_observation.display_location.city;
+    let lat = props.weather.current_observation.display_location.latitude;
+    let lon = props.weather.current_observation.display_location.longitude;
+    let temp = props.weather.current_observation.temp_c;
+    let hum = props.weather.current_observation.relative_humidity;
+    return (
+      <div>
+          <div className='current-weather-wrapper'>
+            <div className='wrapper-small'>
+              <img className='weather-img' src={props.weather.current_observation.icon_url} alt={props.weather.current_observation.icon}></img>
+              <div className='weather-date'>{date}</div>
+              <div className='weather'><span className='val'>{props.weather.current_observation.weather}</span></div>
+            </div>
+            <div className='temp'><span className='val'>{temp}&deg;C</span>Temperature</div>
+            <div className='humidity'><span className='val'>{hum}</span>Humidity</div>
+          </div>
+          <Map className='map'
+            style="mapbox://styles/mapbox/streets-v9"
+            center = {[lon, lat]}
+            containerStyle={{
+                height: "50vh",
+                width: "60vw"
+            }}
+            onClick = {props.updateCordt}>
+          <Layer
+            type="symbol"
+            id="marker"
+            layout={{ "icon-image": "marker-15" }}>
+            <Feature coordinates={[lon, lat]}/>
+          </Layer>
+          <Popup
+            coordinates={[lon,lat]}
+            offset={{
+              'bottom-left': [12, -38],  'bottom': [0, -38], 'bottom-right': [-12, -38]
+            }}>
+            <div className='inline-elm'><div className='location-icon'></div>{loc}</div><br/>
+            <div className='inline-elm'><div className='temp-icon'></div> {temp}<sup>&deg;</sup> C</div><br/>
+            <div className='inline-elm'><div className='humidity-icon'></div> {hum}</div>
+          </Popup>
+        </Map>
       </div>
-      <div className='temp'><span className='val'>{props.weather.current_observation.temp_c}&deg;C</span>Temperature</div>
-      <div className='humidity'><span className='val'>{props.weather.current_observation.relative_humidity}</span>Humidity</div>
-    </div>
-  )
+    )
 }
 
 const Forecast = (props) => {
+  console.log(props.forecast_txt)
   return (
     <div className='forecast-wrapper'>
         <div className='forecast-day'>
@@ -236,14 +301,19 @@ const Forecast = (props) => {
           <span className='year'>{props.forecast.date.year}</span>
         </div>
         <div className='forecast-type'>
-           <div className='forecast-weather'>Weather : {props.forecast.conditions}</div>
+           <div className='forecast-weather'>{props.forecast.conditions}</div>
            <img className='forecast-weather-img' src={props.forecast.icon_url} alt={props.forecast.icon}></img>
         </div>
         <div className='forecast-temp'>
-            Temperature : <b>(High) </b>{props.forecast.high.celsius} &deg;C ,
-                          <b> (Low) </b>{props.forecast.low.celsius} &deg;C
+            <b>(High) </b><span className='val'>{props.forecast.high.celsius}</span><sup> &deg;C</sup>
+            <b> (Low) </b><span className='val'>{props.forecast.low.celsius}</span> <sup>&deg;C</sup>
         </div>
-        <div className='forecast-humidity'>Humidity : {props.forecast.avehumidity}%</div>
+        <div className='forecast-humidity'>Humidity : <span className='val'>{props.forecast.avehumidity}</span><sup>%</sup></div>
+        <div className= 'forecast-txt-wrapper'>
+            <div className='txt'>Day : {props.forecast_txt[0]}</div>
+            <div className='txt'>Night : {props.forecast_txt[1]}</div>
+        </div>
+
     </div>
   )
 }
