@@ -3,8 +3,17 @@ body{
     padding : 0;
 }
 
+.fixed-pos{
+    position: fixed;
+    width: 100%;
+    top: 0;
+    background-color: white;
+    padding-bottom: 2%;
+}
+
 .heading{
     width : 100%;
+    margin-bottom: 2%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -29,6 +38,13 @@ body{
     align-items: center;
 }
 
+.search-root{
+    position: relative;
+    padding-bottom: 0px;
+    display: inline;
+    margin : 3% 0;
+}
+
 .search-input{
     margin-left: 16%;
     width: 60%;
@@ -43,7 +59,12 @@ body{
 .search-input:focus{
     outline-color: #5c007a;
 }
-
+.autocomplete-container{
+    width: 75%;
+    position: absolute;
+    left: 20%;
+    z-index: 2;
+}
 .suggestion-load{
     position: absolute;
     top: 12%;
@@ -62,11 +83,15 @@ body{
     color: #ffffff;
     font-family: Itim, cursive;
     font-size: 15px;
+    border: none;
 }
 
 .btn:hover{
     cursor: pointer;
     box-shadow: 1px 1px 2px 0px black;
+}
+.weather-section{
+    margin-top: 12%;
 }
 .nav-bar{
     width: 60%;
@@ -96,7 +121,7 @@ body{
 .loading{
     height: 150px;
     width: 150px;
-    margin: 0 auto;
+    margin: 15% auto 0;
     background-image: url('https://media1.kobi5.com/wp-content/custom/DEQ/sun_loader.gif');
     background-size: 100%;
     background-repeat: no-repeat;
@@ -234,7 +259,7 @@ body{
 }
 
 .map{
-    margin-top: 5%;
+    margin-top: 2%;
 }
 
 .inline-elm{
