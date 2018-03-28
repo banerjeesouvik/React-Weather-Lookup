@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Header from './Components/header.js';
 import SearchBar from './Components/Searchbar.js';
 import Weather from './Components/weather.js';
-import GetQueryParameterByName from './Components/getQueryparameter.js'
+import GetQueryParameterByName from './getQueryparameter.js'
 import './App.css';
 
 class App extends Component{
@@ -12,7 +12,7 @@ class App extends Component{
           window.location.href='/places/params?lat=12.970000&lng=77.589996';
       }
       const RenderLocation = ({match}) => {
-        console.log(match);
+        //console.log(match);
         let latLng=[];
         latLng.push(GetQueryParameterByName('lat'));
         latLng.push(GetQueryParameterByName('lng'));
@@ -50,7 +50,7 @@ class WeatherApp extends Component {
   }
   componentWillReceiveProps(nextProps){
     if(nextProps.lngLat.lng !== null && nextProps.lngLat.lat !== null){
-      console.log('triggered');
+     // console.log('triggered');
       this.setState({lat : nextProps.lngLat.lat, lon : nextProps.lngLat.lng});
     }
   }

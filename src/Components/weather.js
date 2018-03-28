@@ -152,9 +152,9 @@ class Weather extends Component {
   render() {
     let weather = this.state.weatherInfo;
     let forecast = this.state.forecast;
-    //console.log(forecast)
     let forecast_text = [];
-    if (this.state.isDataFetched) {
+    if (this.state.isDataFetched && forecast.response.error === undefined) {
+      //console.log(forecast);
       let temp_forecast = forecast.forecast.txt_forecast.forecastday.slice(2, 8).map((val) => {
         return val.fcttext_metric;
       });
@@ -166,6 +166,9 @@ class Weather extends Component {
       }
       forecast_text = tmp;
       //console.log(tmp);
+    }
+    else if(this.state.isDataFetched){
+      return <div className='invalid-query'>{forecast.response.error.description}</div>;
     }
     let display;
     if (this.state.day === 'today') {
