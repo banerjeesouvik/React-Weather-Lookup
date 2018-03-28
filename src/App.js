@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Header from './Components/header.js';
 import SearchBar from './Components/Searchbar.js';
 import Weather from './Components/weather.js';
-import GetQueryParameterByName from './Components/getQueryparameter.js'
+import GetQueryParameterByName from './getQueryparameter.js'
 import './App.css';
 
 class App extends Component{
