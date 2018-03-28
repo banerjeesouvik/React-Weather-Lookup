@@ -63,7 +63,7 @@ body{
     width: 75%;
     position: absolute;
     left: 20%;
-    z-index: 2;
+    z-index: 1;
 }
 .suggestion-load{
     position: absolute;

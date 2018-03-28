@@ -6,7 +6,7 @@ class SearchBar extends React.Component {
     super(props)
     this.state = { address: '' }
     this.onChange = (address) => this.setState({ address })
-    this.sendCity = this.sendCity.bind(this);
+   // this.sendCity = this.sendCity.bind(this);
   }
  
   handleFormSubmit = (event) => {
@@ -15,21 +15,23 @@ class SearchBar extends React.Component {
     geocodeByAddress(this.state.address)
       .then(results => getLatLng(results[0]))
       .then(latLng => {
-          this.sendCity(latLng);
+          //this.sendCity(latLng);
+          window.location.href = `/places/params?lat=${latLng.lat}&lng=${latLng.lng}`;
       })
       .catch(error => console.error('Error', error))
   }
-  sendCity = (latLng) => {
-    //console.log(latLng)
-    if(latLng !== undefined){
-      this.props.updateParent(latLng);
-    }
-  }
+  // sendCity = (latLng) => {
+  //   //console.log(latLng)
+  //   if(latLng !== undefined){
+  //     this.props.updateParent(latLng);
+  //   }
+  // }
   render() {
     const inputProps = {
       value: this.state.address,
       onChange: this.onChange,
-      placeholder: 'Search Places...'
+      placeholder: 'Search Places...',
+      onFocus : window.scrollTo(0,0)
     }
     const cssStyle = {
         root : 'search-root',

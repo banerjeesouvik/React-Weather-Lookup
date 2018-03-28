@@ -8,10 +8,4 @@ function GetQueryParameterByName(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
-const GetLatLng = ({match}) => {
-    let lngLat = {};
-    lngLat.lat = this.GetQueryParameterByName('lat');
-    lngLat.lng = this.GetQueryParameterByName('lng');
-    console.log(lngLat);
-    return <WeatherApp lngLat={lngLat}/>
-  }
+export default GetQueryParameterByName;

@@ -1,16 +1,32 @@
 import React, { Component } from 'react';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import Header from './Components/header.js';
 import SearchBar from './Components/Searchbar.js';
 import Weather from './Components/weather.js';
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import GetQueryParameterByName from './Components/getQueryparameter.js'
 import './App.css';
 
 class App extends Component{
-  
     render(){
+      const HomePageRouter = () => {
+          window.location.href='/places/params?lat=12.970000&lng=77.589996';
+      }
+      const RenderLocation = ({match}) => {
+        console.log(match);
+        let latLng=[];
+        latLng.push(GetQueryParameterByName('lat'));
+        latLng.push(GetQueryParameterByName('lng'));
+        if(latLng.length === 2){
+          return <WeatherApp latlng={latLng} />
+        }else{
+          return <HomePageRouter />
+        }
+      }
         return(
           <Router>
             <div>
-            <Route exact path='/' component={WeatherApp} />
+            <Route exact path='/' component={HomePageRouter} />
+            <Route path = '/places/:params' component={RenderLocation} />
             </div>
           </Router>
         )
@@ -18,18 +34,19 @@ class App extends Component{
 }
 
 class WeatherApp extends Component {
-  constructor(){
-    super();
+  constructor(props){
+    super(props);
     this.state = {
-      lat : 12.970000,
-      lon : 77.589996
+      lat : this.props.latlng[0],
+      lon : this.props.latlng[1]
     }
     this.updateLngLat = this.updateLngLat.bind(this);
   }
   
-  updateLngLat(lngLat){
+  updateLngLat(latLng){
     //console.log('app received',lngLat);
-    this.setState({lat: lngLat.lat, lon : lngLat.lng});
+    //this.setState({lat: lngLat.lat, lon : lngLat.lng});
+    window.location.href = `/places/params?lat=${latLng.lat}&lng=${latLng.lng}`;
   }
   componentWillReceiveProps(nextProps){
     if(nextProps.lngLat.lng !== null && nextProps.lngLat.lat !== null){
@@ -50,16 +67,6 @@ class WeatherApp extends Component {
     );
   }
 }
-
-const Header = () =>
-      <div className='heading'>
-        <div className='heading-logo'></div>
-        Weather<span className='heading-last'>.app</span>
-      </div>;
-
-
-
-
 
 
 export default App;
