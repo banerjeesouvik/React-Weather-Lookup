@@ -295,3 +295,9 @@ body{
     background-position: center;
     background-repeat: no-repeat;
 }
+
+.invalid-query{
+    margin-top: 15%;
+    text-align: center;
+    color: #555;
+}

@@ -153,6 +153,7 @@ class Weather extends Component {
     let weather = this.state.weatherInfo;
     let forecast = this.state.forecast;
     //console.log(forecast)
+    let forecast_text = [];
     if (this.state.isDataFetched && forecast.response.error === undefined) {
       //console.log(forecast);
       let temp_forecast = forecast.forecast.txt_forecast.forecastday.slice(2, 8).map((val) => {
