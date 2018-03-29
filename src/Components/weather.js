@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ReactMapboxGl, { Layer, Feature, Popup } from "react-mapbox-gl";
+import { connect } from 'react-redux'
 
 class Navbar extends Component {
   updateDay(day) {
@@ -116,32 +117,39 @@ class Weather extends Component {
   updateDay(val) {
     this.setState({ day: val });
   }
-  componentWillReceiveProps(nextProps) {
-    this.setState({ isDataFetched: false });
-    if (nextProps.city.lat !== this.props.city.lat) {
-      //console.log(nextProps.city)
-      fetch(`http://api.wunderground.com/api/3b051654317f7634/conditions/q/${nextProps.city.lat},${nextProps.city.lon}.json`)
-        .then(response => response.json())
-        .then(weatherInfo => {
-          //console.log(response);
-          fetch(`http://api.wunderground.com/api/3b051654317f7634/forecast/q/${nextProps.city.lat},${nextProps.city.lon}.json`)
-            .then(response => response.json())
-            .then(forecast => {
-              this.setState({ weatherInfo: weatherInfo, forecast: forecast, isDataFetched: true, day: 'today' })
-            })
-        })
-    }
-  }
+  // componentWillReceiveProps(nextProps) {
+  //   //console.log(nextProps)
+  //   //this.setState({ isDataFetched: false });
+  //   this.props.dispatch({type: 'FETCH_WEATHER_START', isDataFetched: false})
+  //   if (nextProps.lat !== this.props.lat) {
+  //     //console.log(nextProps.city)
+  //     fetch(`http://api.wunderground.com/api/3b051654317f7634/conditions/q/${nextProps.lat},${nextProps.lng}.json`)
+  //       .then(response => response.json())
+  //       .then(weatherInfo => {
+  //         //console.log(response);
+  //         fetch(`http://api.wunderground.com/api/3b051654317f7634/forecast/q/${nextProps.lat},${nextProps.lng}.json`)
+  //           .then(response => response.json())
+  //           .then(forecast => {
+  //             this.setState({ weatherInfo: weatherInfo, forecast: forecast, isDataFetched: true, day: 'today' })
+  //             // this.props.dispatch({type: 'FETCH_DONE', isDataFetched : true, currentWeather : weatherInfo , 
+  //             // weatherForecast : forecast})
+  //           })
+  //       })
+  //   }
+  // }
   componentDidMount() {
-    fetch(`http://api.wunderground.com/api/3b051654317f7634/conditions/q/${this.props.city.lat},${this.props.city.lon}.json`)
+    console.log(this.props)
+    fetch(`http://api.wunderground.com/api/3b051654317f7634/conditions/q/${this.props.lat},${this.props.lng}.json`)
       .then(response => response.json())
       .then(weatherInfo => {
         //console.log(weatherInfo);
-        fetch(`http://api.wunderground.com/api/3b051654317f7634/forecast/q/${this.props.city.lat},${this.props.city.lon}.json`)
+        fetch(`http://api.wunderground.com/api/3b051654317f7634/forecast/q/${this.props.lat},${this.props.lng}.json`)
           .then(response => response.json())
           .then(forecast => {
             //console.log(forecast);
             this.setState({ weatherInfo: weatherInfo, forecast: forecast, isDataFetched: true })
+            // this.props.dispatch({type: 'FETCH_DONE', isDataFetched : true, currentWeather : weatherInfo , 
+            // weatherForecast : forecast})
           })
       })
   }
@@ -150,6 +158,7 @@ class Weather extends Component {
     this.props.updateCordt(event.lngLat);
   }
   render() {
+    console.log(this.props)
     let weather = this.state.weatherInfo;
     let forecast = this.state.forecast;
     let forecast_text = [];
@@ -188,7 +197,7 @@ class Weather extends Component {
             <div>State : <span className='state'>{weather.current_observation.display_location.state}</span></div>
             <div>Country : <span className='country'>{weather.current_observation.display_location.state_name}</span></div>
           </div>
-          <Navbar updateDay={this.updateDay} day={this.state.day} />
+          <Navbar updateDay={this.updateDay} /*day={this.state.day}*/ />
           <div className='weather-info'>
             {display}
           </div>
@@ -202,4 +211,8 @@ class Weather extends Component {
   }
 }
 
-export default Weather;
+const mapStateToProps = (state) => {
+  return state;
+}
+
+export default connect(mapStateToProps)(Weather)

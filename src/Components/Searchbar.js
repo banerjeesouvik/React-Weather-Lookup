@@ -15,17 +15,16 @@ class SearchBar extends React.Component {
     geocodeByAddress(this.state.address)
       .then(results => getLatLng(results[0]))
       .then(latLng => {
-          //this.sendCity(latLng);
-          window.location.href = `/places/params?lat=${latLng.lat}&lng=${latLng.lng}`;
+          this.sendCity(latLng);
       })
       .catch(error => console.error('Error', error))
   }
-  // sendCity = (latLng) => {
-  //   //console.log(latLng)
-  //   if(latLng !== undefined){
-  //     this.props.updateParent(latLng);
-  //   }
-  // }
+  sendCity = (latLng) => {
+    //console.log(latLng)
+    if(latLng !== undefined){
+      this.props.updateParent(latLng);
+    }
+  }
   render() {
     const inputProps = {
       value: this.state.address,
