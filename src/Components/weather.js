@@ -103,17 +103,17 @@ const Forecast = (props) => {
 }
 
 class Weather extends Component {
-  constructor() {
-    super();
-    this.state = {
-      weatherInfo: [],
-      forecast: [],
-      isDataFetched: false,
-      day: 'today'
-    }
-    this.updateDay = this.updateDay.bind(this);
-    this.updateCoordinate = this.updateCoordinate.bind(this);
-  }
+  // constructor() {
+  //   super();
+  //   this.state = {
+  //     weatherInfo: [],
+  //     forecast: [],
+  //     isDataFetched: false,
+  //     day: 'today'
+  //   }
+  //   this.updateDay = this.updateDay.bind(this);
+  //   this.updateCoordinate = this.updateCoordinate.bind(this);
+  // }
   updateDay(val) {
     this.setState({ day: val });
   }
@@ -147,9 +147,9 @@ class Weather extends Component {
           .then(response => response.json())
           .then(forecast => {
             //console.log(forecast);
-            this.setState({ weatherInfo: weatherInfo, forecast: forecast, isDataFetched: true })
-            // this.props.dispatch({type: 'FETCH_DONE', isDataFetched : true, currentWeather : weatherInfo , 
-            // weatherForecast : forecast})
+            //this.setState({ weatherInfo: weatherInfo, forecast: forecast, isDataFetched: true })
+             this.props.dispatch({type: 'FETCH_DONE', isDataFetched : true, currentWeather : weatherInfo , 
+             weatherForecast : forecast})
           })
       })
   }
@@ -158,11 +158,11 @@ class Weather extends Component {
     this.props.updateCordt(event.lngLat);
   }
   render() {
-    console.log(this.props)
-    let weather = this.state.weatherInfo;
-    let forecast = this.state.forecast;
+    //console.log(this.props)
+    let weather = this.props.currentWeather;
+    let forecast = this.props.weatherForecast;
     let forecast_text = [];
-    if (this.state.isDataFetched && forecast.response.error === undefined) {
+    if (this.props.isDataFetched && forecast.response.error === undefined) {
       //console.log(forecast);
       let temp_forecast = forecast.forecast.txt_forecast.forecastday.slice(2, 8).map((val) => {
         return val.fcttext_metric;
@@ -176,11 +176,11 @@ class Weather extends Component {
       forecast_text = tmp;
       //console.log(tmp);
     }
-    else if(this.state.isDataFetched){
+    else if(this.props.isDataFetched){
       return <div className='invalid-query'>{forecast.response.error.description}</div>;
     }
     let display;
-    if (this.state.day === 'today') {
+    if (this.props.weatherDisplayType === 'today') {
       display = <Today weather={weather} updateCordt={this.updateCoordinate} />;
     } else if (this.state.day === 'forecast') {
       let i = -1;
@@ -189,7 +189,7 @@ class Weather extends Component {
         return <Forecast key={forcst.date.weekday} forecast={forcst} forecast_txt={forecast_text[i]} />;
       });
     }
-    if (this.state.isDataFetched) {
+    if (this.props.isDataFetched) {
       return (
         <div className='weather-section'>
           <div className='city-info'>
@@ -197,7 +197,7 @@ class Weather extends Component {
             <div>State : <span className='state'>{weather.current_observation.display_location.state}</span></div>
             <div>Country : <span className='country'>{weather.current_observation.display_location.state_name}</span></div>
           </div>
-          <Navbar updateDay={this.updateDay} /*day={this.state.day}*/ />
+          <Navbar updateDay={this.updateDay} day={this.props.weatherDisplayType} />
           <div className='weather-info'>
             {display}
           </div>
