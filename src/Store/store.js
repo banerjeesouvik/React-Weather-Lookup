@@ -10,16 +10,16 @@ const reducer = function (state, action) {
       case 'FETCH_WEATHER_START':
         return { ...state, isDataFetched : action.isDataFetched}
       case 'FETCH_DONE':
-        return { ...state, isDataFetched : action.isDataFetched, currentWeather : action.currentWeather , 
+        return { ...state, isDataFetched : action.isDataFetched, currentWeather : action.currentWeather ,
         weatherForecast : action.weatherForecast}
       case 'REMOVE_HISTORY':
-        return { ...state, cityList:[...state.cityList.splice(action.idx,1)]}
+        return { ...state, cityList: state.cityList.filter((val,idx)=> idx !== action.idx)}
       default:
         return { ...state }
     }
 }
 const middleWare = applyMiddleware(thunk);
-  
+
 const store = createStore(reducer, {
     lat: 12.970000,
     lng: 77.589996,

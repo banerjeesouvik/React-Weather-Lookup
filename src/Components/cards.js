@@ -8,7 +8,7 @@ class Cards extends Component {
       cityList : []
     }
   }
-  
+
   removeHistory = (index) => {
     console.log('clicked')
     this.props.dispatch({type:'REMOVE_HISTORY', idx: index});
@@ -16,12 +16,12 @@ class Cards extends Component {
 
   render(){
     let i = -1;
-    let cardList = this.props.cityList.length > 0 ? 
+    let cardList = this.props.cityList.length > 0 ?
                    this.props.cityList.map((city) => {
                      return (
                      <div className='cards'>
                         <div className='card-city-name'>{city.name}</div>
-                        <div className='close-btn' onClick={()=>{this.removeHistory(i++)}}>X</div>
+                        <div className='close-btn' onClick={()=>{this.removeHistory(++i)}}>X</div>
                         <div className='card-temp-hum-wrapper'>
                           <div className='temp-icon'></div>
                           <div className='card-city-temp'>{city.temp}&deg;C</div>

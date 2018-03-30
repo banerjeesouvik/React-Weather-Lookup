@@ -37,7 +37,7 @@ const Today = (props) => {
   let temp = props.weather.current_observation.temp_c;
   let hum = props.weather.current_observation.relative_humidity;
   return (
-    <div>
+     <div>
       <div className='current-weather-wrapper'>
         <div className='wrapper-small'>
           <img className='weather-img' src={props.weather.current_observation.icon_url} alt={props.weather.current_observation.icon}></img>
@@ -109,7 +109,7 @@ class Weather extends Component {
     this.state = {
       weatherInfo: [],
       forecast: [],
-      isDataFetched: false,
+      //isDataFetched: false,
       day: 'today'
     }
     this.updateDay = this.updateDay.bind(this);
@@ -120,10 +120,10 @@ class Weather extends Component {
   }
   componentWillReceiveProps(nextProps) {
       console.log(nextProps, 'nextProps')
-    this.setState({ isDataFetched: false });
     //this.props.dispatch({type: 'FETCH_WEATHER_START', isDataFetched: false})
     console.log(typeof this.props.lng, typeof this.props.latLng[1])
     if (nextProps.latLng[0] !== nextProps.lat || nextProps.latLng[1] !== nextProps.lng) {
+        this.setState({ isDataFetched: false });
       fetch(`http://api.wunderground.com/api/3b051654317f7634/conditions/q/${this.props.latLng[0]},${this.props.latLng[1]}.json`)
         .then(response => response.json())
         .then(weatherInfo => {
@@ -132,7 +132,7 @@ class Weather extends Component {
             .then(response => response.json())
             .then(forecast => {
               this.setState({ weatherInfo: weatherInfo, forecast: forecast, isDataFetched: true, day: 'today' })
-              this.props.dispatch({type:'CHANGE_LOCATION', lat : this.props.latLng[0], lng: this.props.latLng[1], isDataFetched : true,
+              this.props.dispatch({type:'CHANGE_LOCATION', lat : this.props.latLng[0], lng: this.props.latLng[1],
               city : {name: weatherInfo.current_observation.display_location.city,
                       temp: weatherInfo.current_observation.temp_c,
                       hum: weatherInfo.current_observation.relative_humidity}
@@ -140,7 +140,7 @@ class Weather extends Component {
             })
         })
     }
-    
+
   }
   componentDidMount() {
     console.log('Did Mount called')
@@ -154,7 +154,7 @@ class Weather extends Component {
             //console.log(forecast);
             this.setState({ weatherInfo: weatherInfo, forecast: forecast, isDataFetched: true })
             if(this.props.lat.toString() !== this.props.latLng[0] && this.props.lng.toString() !== this.props.latLng[1]){
-              this.props.dispatch({type:'CHANGE_LOCATION', lat : this.props.latLng[0], lng: this.props.latLng[1], isDataFetched:true,
+              this.props.dispatch({type:'CHANGE_LOCATION', lat : this.props.latLng[0], lng: this.props.latLng[1],
               city : {name: weatherInfo.current_observation.display_location.city,
                       temp: weatherInfo.current_observation.temp_c,
                       hum: weatherInfo.current_observation.relative_humidity}

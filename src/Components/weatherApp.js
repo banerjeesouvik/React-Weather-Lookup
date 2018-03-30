@@ -32,10 +32,10 @@ class WeatherApp extends Component {
   //     //this.setState({ lat: nextProps.latlng[0], lon: nextProps.latlng[1] });
   //   }
   // }
-  
+
   render() {
     //console.log(this.state.loc)
-    
+
     return (
       <div>
         <div className='fixed-pos'>
