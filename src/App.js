@@ -19,13 +19,10 @@ class App extends Component {
       let latLng = [];
       latLng.push(GetQueryParameterByName('lat'));
       latLng.push(GetQueryParameterByName('lng'));
-      console.log(latLng[0], this.props.lat, latLng[1], this.props.lng)
-      if(this.props.lat.toString() !== latLng[0] && this.props.lng.toString() !== latLng[1]){
-        this.props.dispatch({type:'CHANGE_LOCATION', lat : latLng[0], lng: latLng[1], weatherDisplayType: 'today'});
-        console.log('triggered')
-      }
+     // console.log(latLng[0], this.props.lat, latLng[1], this.props.lng)
+      
       if (latLng.length === 2) {
-        return <WeatherApp history={history} /*latlng={latLng}*//>
+        return <WeatherApp history={history} latLng={latLng}/>
       } else {
         return <HomePageRouter />
       }
@@ -43,7 +40,10 @@ class App extends Component {
 }
 
 const mapStateToProps = (state) => {
-  return state;
+  return {
+    lat : state.lat,
+    lng : state.lng
+  }
 }
 
 export default connect(mapStateToProps)(App)

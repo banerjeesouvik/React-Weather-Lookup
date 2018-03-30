@@ -301,3 +301,34 @@ body{
     text-align: center;
     color: #333;
 }
+
+.card-list{
+    position: absolute;
+    top: 20%;
+    right: 2%;
+    width: 13%;
+    text-align: center;
+    z-index: 1;
+}
+
+.cards{
+    padding: 5px 5px 0 5px;
+    color: #444;
+    font-family: Itim, cursive;
+    background-color: aliceblue;
+    margin-top: 3px;
+}
+.cards .close-btn{
+    padding: 2px;
+}
+.cards .close-btn:hover{
+    color: tomato;
+    cursor: pointer;
+}
+
+.card-temp-hum-wrapper{
+    display: inline-flex;
+    width: 100%;
+    justify-content: space-around;
+    align-items: center
+}

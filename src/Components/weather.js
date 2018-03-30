@@ -29,6 +29,7 @@ const Map = ReactMapboxGl({
 });
 
 const Today = (props) => {
+  console.log(props)
   let date = props.weather.current_observation.observation_time_rfc822.split(' ').slice(0, 3).join(' ');
   let loc = props.weather.current_observation.display_location.city;
   let lat = props.weather.current_observation.display_location.latitude;
@@ -103,42 +104,46 @@ const Forecast = (props) => {
 }
 
 class Weather extends Component {
-  // constructor() {
-  //   super();
-  //   this.state = {
-  //     weatherInfo: [],
-  //     forecast: [],
-  //     isDataFetched: false,
-  //     day: 'today'
-  //   }
-  //   this.updateDay = this.updateDay.bind(this);
-  //   this.updateCoordinate = this.updateCoordinate.bind(this);
-  // }
+  constructor() {
+    super();
+    this.state = {
+      weatherInfo: [],
+      forecast: [],
+      isDataFetched: false,
+      day: 'today'
+    }
+    this.updateDay = this.updateDay.bind(this);
+    this.updateCoordinate = this.updateCoordinate.bind(this);
+  }
   updateDay(val) {
     this.setState({ day: val });
   }
-  // componentWillReceiveProps(nextProps) {
-  //   //console.log(nextProps)
-  //   //this.setState({ isDataFetched: false });
-  //   this.props.dispatch({type: 'FETCH_WEATHER_START', isDataFetched: false})
-  //   if (nextProps.lat !== this.props.lat) {
-  //     //console.log(nextProps.city)
-  //     fetch(`http://api.wunderground.com/api/3b051654317f7634/conditions/q/${nextProps.lat},${nextProps.lng}.json`)
-  //       .then(response => response.json())
-  //       .then(weatherInfo => {
-  //         //console.log(response);
-  //         fetch(`http://api.wunderground.com/api/3b051654317f7634/forecast/q/${nextProps.lat},${nextProps.lng}.json`)
-  //           .then(response => response.json())
-  //           .then(forecast => {
-  //             this.setState({ weatherInfo: weatherInfo, forecast: forecast, isDataFetched: true, day: 'today' })
-  //             // this.props.dispatch({type: 'FETCH_DONE', isDataFetched : true, currentWeather : weatherInfo , 
-  //             // weatherForecast : forecast})
-  //           })
-  //       })
-  //   }
-  // }
+  componentWillReceiveProps(nextProps) {
+      console.log(nextProps, 'nextProps')
+    this.setState({ isDataFetched: false });
+    //this.props.dispatch({type: 'FETCH_WEATHER_START', isDataFetched: false})
+    console.log(typeof this.props.lng, typeof this.props.latLng[1])
+    if (nextProps.latLng[0] !== nextProps.lat || nextProps.latLng[1] !== nextProps.lng) {
+      fetch(`http://api.wunderground.com/api/3b051654317f7634/conditions/q/${this.props.latLng[0]},${this.props.latLng[1]}.json`)
+        .then(response => response.json())
+        .then(weatherInfo => {
+          //console.log(response);
+          fetch(`http://api.wunderground.com/api/3b051654317f7634/forecast/q/${this.props.latLng[0]},${this.props.latLng[1]}.json`)
+            .then(response => response.json())
+            .then(forecast => {
+              this.setState({ weatherInfo: weatherInfo, forecast: forecast, isDataFetched: true, day: 'today' })
+              this.props.dispatch({type:'CHANGE_LOCATION', lat : this.props.latLng[0], lng: this.props.latLng[1], isDataFetched : true,
+              city : {name: weatherInfo.current_observation.display_location.city,
+                      temp: weatherInfo.current_observation.temp_c,
+                      hum: weatherInfo.current_observation.relative_humidity}
+                    });
+            })
+        })
+    }
+    
+  }
   componentDidMount() {
-    console.log(this.props)
+    console.log('Did Mount called')
     fetch(`http://api.wunderground.com/api/3b051654317f7634/conditions/q/${this.props.lat},${this.props.lng}.json`)
       .then(response => response.json())
       .then(weatherInfo => {
@@ -147,9 +152,15 @@ class Weather extends Component {
           .then(response => response.json())
           .then(forecast => {
             //console.log(forecast);
-            //this.setState({ weatherInfo: weatherInfo, forecast: forecast, isDataFetched: true })
-             this.props.dispatch({type: 'FETCH_DONE', isDataFetched : true, currentWeather : weatherInfo , 
-             weatherForecast : forecast})
+            this.setState({ weatherInfo: weatherInfo, forecast: forecast, isDataFetched: true })
+            if(this.props.lat.toString() !== this.props.latLng[0] && this.props.lng.toString() !== this.props.latLng[1]){
+              this.props.dispatch({type:'CHANGE_LOCATION', lat : this.props.latLng[0], lng: this.props.latLng[1], isDataFetched:true,
+              city : {name: weatherInfo.current_observation.display_location.city,
+                      temp: weatherInfo.current_observation.temp_c,
+                      hum: weatherInfo.current_observation.relative_humidity}
+              });
+              console.log('triggered')
+            }
           })
       })
   }
@@ -159,10 +170,11 @@ class Weather extends Component {
   }
   render() {
     //console.log(this.props)
-    let weather = this.props.currentWeather;
-    let forecast = this.props.weatherForecast;
+    console.log('rendered')
+    let weather = this.state.weatherInfo;
+    let forecast = this.state.forecast;
     let forecast_text = [];
-    if (this.props.isDataFetched && forecast.response.error === undefined) {
+    if (this.state.isDataFetched && forecast.response.error === undefined) {
       //console.log(forecast);
       let temp_forecast = forecast.forecast.txt_forecast.forecastday.slice(2, 8).map((val) => {
         return val.fcttext_metric;
@@ -176,11 +188,11 @@ class Weather extends Component {
       forecast_text = tmp;
       //console.log(tmp);
     }
-    else if(this.props.isDataFetched){
+    else if(this.state.isDataFetched){
       return <div className='invalid-query'>{forecast.response.error.description}</div>;
     }
     let display;
-    if (this.props.weatherDisplayType === 'today') {
+    if (this.state.day === 'today') {
       display = <Today weather={weather} updateCordt={this.updateCoordinate} />;
     } else if (this.state.day === 'forecast') {
       let i = -1;
@@ -189,7 +201,7 @@ class Weather extends Component {
         return <Forecast key={forcst.date.weekday} forecast={forcst} forecast_txt={forecast_text[i]} />;
       });
     }
-    if (this.props.isDataFetched) {
+    if (this.state.isDataFetched) {
       return (
         <div className='weather-section'>
           <div className='city-info'>
@@ -197,7 +209,7 @@ class Weather extends Component {
             <div>State : <span className='state'>{weather.current_observation.display_location.state}</span></div>
             <div>Country : <span className='country'>{weather.current_observation.display_location.state_name}</span></div>
           </div>
-          <Navbar updateDay={this.updateDay} day={this.props.weatherDisplayType} />
+          <Navbar updateDay={this.updateDay} day={this.state.day} />
           <div className='weather-info'>
             {display}
           </div>

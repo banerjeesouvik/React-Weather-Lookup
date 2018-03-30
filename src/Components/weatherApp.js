@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import Header from './header.js'
 import SearchBar from './Searchbar.js'
 import Weather from './weather.js'
+import Cards from './cards.js'
 
 class WeatherApp extends Component {
   // constructor(props) {
@@ -18,7 +19,7 @@ class WeatherApp extends Component {
   }
 
   updateLngLat = (latLng) => {
-    console.log(this.props, 'hist')
+    //console.log(this.props, 'hist')
     //console.log(latLng)
     this.props.history.push(`/places/params?lat=${latLng.lat}&lng=${latLng.lng}`)
     //console.log(this.props)
@@ -34,13 +35,15 @@ class WeatherApp extends Component {
   
   render() {
     //console.log(this.state.loc)
+    
     return (
       <div>
         <div className='fixed-pos'>
           <Header />
           <SearchBar updateParent={this.updateLngLat} />
         </div>
-        <Weather /*city={this.state}*/ updateCordt={this.updateLngLat} />
+        <Weather latLng={this.props.latLng} updateCordt={this.updateLngLat} />
+        <Cards />
       </div>
     );
   }
