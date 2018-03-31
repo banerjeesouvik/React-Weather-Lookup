@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import ReactMapboxGl, { Layer, Feature, Popup } from "react-mapbox-gl";
+import ReactMapboxGl, { Layer, Popup, Marker } from "react-mapbox-gl";
 import { connect } from 'react-redux'
 
 class Navbar extends Component {
@@ -59,10 +59,23 @@ const Today = (props) => {
           type="symbol"
           id="marker"
           layout={{ "icon-image": "marker-15" }}>
-          <Feature coordinates={[lon, lat]} />
         </Layer>
+        <Marker
+          coordinates={[lon, lat]}
+          anchor="bottom">
+          <img src='https://www.spreadshirt.com.au/image-server/v1/mp/designs/12224267,width=178,height=178/location-icon-blue.png' alt='marker' height='20px' width='20px'/>
+        </Marker>
         <Popup
           coordinates={[lon, lat]}
+          offset={{
+            'bottom-left': [12, -38], 'bottom': [0, -38], 'bottom-right': [-12, -38]
+          }}>
+          <div className='inline-elm'><div className='location-icon'></div>{loc}</div><br />
+          <div className='inline-elm'><div className='temp-icon'></div> {temp}<sup>&deg;</sup> C</div><br />
+          <div className='inline-elm'><div className='humidity-icon'></div> {hum}</div>
+        </Popup>
+        <Popup
+          coordinates={[12.970000, 77.589996]}
           offset={{
             'bottom-left': [12, -38], 'bottom': [0, -38], 'bottom-right': [-12, -38]
           }}>

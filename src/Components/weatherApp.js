@@ -14,9 +14,6 @@ class WeatherApp extends Component {
   //   }
   //   this.updateLngLat = this.updateLngLat.bind(this);
   // }
-  constructor() {
-    super()
-  }
 
   updateLngLat = (latLng) => {
     //console.log(this.props, 'hist')

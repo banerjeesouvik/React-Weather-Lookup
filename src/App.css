@@ -313,13 +313,15 @@ body{
 
 .cards{
     padding: 5px 5px 0 5px;
+    display: grid;
+    grid-template-columns: 1fr 5fr;
     color: #444;
     font-family: Itim, cursive;
     background-color: aliceblue;
     margin-top: 3px;
 }
 .cards .close-btn{
-    padding: 2px;
+    font-size: 10px;
 }
 .cards .close-btn:hover{
     color: tomato;
@@ -328,7 +330,30 @@ body{
 
 .card-temp-hum-wrapper{
     display: inline-flex;
-    width: 100%;
+    width: 90%;
     justify-content: space-around;
     align-items: center
+}
+
+.card-name-btn-wrapper{
+    display : grid;
+    grid-template-columns: 4fr 1fr;
+}
+
+.card-city-name {
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis; 
+}
+.card-loc-icon{
+    grid-row: 1/4;
+    grid-column: 1;
+    background-image: url('https://www.spreadshirt.com.au/image-server/v1/mp/designs/12224267,width=178,height=178/location-icon-blue.png');
+    background-size : 100% auto;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.card-wrapper{
+    grid-column: 2;
 }
