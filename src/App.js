@@ -12,7 +12,6 @@ class App extends Component{
           window.location.href='/places/params?lat=12.970000&lng=77.589996';
       }
       const RenderLocation = ({match}) => {
-        console.log(match);
         let latLng=[];
         latLng.push(GetQueryParameterByName('lat'));
         latLng.push(GetQueryParameterByName('lng'));
