@@ -1,5 +1,5 @@
 # React Weather Lookup
-This is a web application for weather lookup. This web-app has been built using ReactJS. 
+This is a web application for weather lookup. This web-app has been built using ReactJS and Redux. 
 
 ## Features
   - Current weather condition for a location

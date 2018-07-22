@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import ReactMapboxGl, { Layer, Feature, Popup } from "react-mapbox-gl";
+import ReactMapboxGl, { Layer, Popup, Marker } from "react-mapbox-gl";
+import { connect } from 'react-redux'
 
 class Navbar extends Component {
   updateDay(day) {
@@ -28,6 +29,7 @@ const Map = ReactMapboxGl({
 });
 
 const Today = (props) => {
+  console.log(props)
   let date = props.weather.current_observation.observation_time_rfc822.split(' ').slice(0, 3).join(' ');
   let loc = props.weather.current_observation.display_location.city;
   let lat = props.weather.current_observation.display_location.latitude;
@@ -35,7 +37,7 @@ const Today = (props) => {
   let temp = props.weather.current_observation.temp_c;
   let hum = props.weather.current_observation.relative_humidity;
   return (
-    <div>
+     <div>
       <div className='current-weather-wrapper'>
         <div className='wrapper-small'>
           <img className='weather-img' src={props.weather.current_observation.icon_url} alt={props.weather.current_observation.icon}></img>
@@ -57,10 +59,23 @@ const Today = (props) => {
           type="symbol"
           id="marker"
           layout={{ "icon-image": "marker-15" }}>
-          <Feature coordinates={[lon, lat]} />
         </Layer>
+        <Marker
+          coordinates={[lon, lat]}
+          anchor="bottom">
+          <img src='https://www.spreadshirt.com.au/image-server/v1/mp/designs/12224267,width=178,height=178/location-icon-blue.png' alt='marker' height='20px' width='20px'/>
+        </Marker>
         <Popup
           coordinates={[lon, lat]}
+          offset={{
+            'bottom-left': [12, -38], 'bottom': [0, -38], 'bottom-right': [-12, -38]
+          }}>
+          <div className='inline-elm'><div className='location-icon'></div>{loc}</div><br />
+          <div className='inline-elm'><div className='temp-icon'></div> {temp}<sup>&deg;</sup> C</div><br />
+          <div className='inline-elm'><div className='humidity-icon'></div> {hum}</div>
+        </Popup>
+        <Popup
+          coordinates={[12.970000, 77.589996]}
           offset={{
             'bottom-left': [12, -38], 'bottom': [0, -38], 'bottom-right': [-12, -38]
           }}>
@@ -107,7 +122,7 @@ class Weather extends Component {
     this.state = {
       weatherInfo: [],
       forecast: [],
-      isDataFetched: false,
+      //isDataFetched: false,
       day: 'today'
     }
     this.updateDay = this.updateDay.bind(this);
@@ -117,31 +132,48 @@ class Weather extends Component {
     this.setState({ day: val });
   }
   componentWillReceiveProps(nextProps) {
-    this.setState({ isDataFetched: false });
-    if (nextProps.city.lat !== this.props.city.lat) {
-      //console.log(nextProps.city)
-      fetch(`http://api.wunderground.com/api/3b051654317f7634/conditions/q/${nextProps.city.lat},${nextProps.city.lon}.json`)
+      console.log(nextProps, 'nextProps')
+    //this.props.dispatch({type: 'FETCH_WEATHER_START', isDataFetched: false})
+    console.log(typeof this.props.lng, typeof this.props.latLng[1])
+    if (nextProps.latLng[0] !== nextProps.lat || nextProps.latLng[1] !== nextProps.lng) {
+        this.setState({ isDataFetched: false });
+      fetch(`http://api.wunderground.com/api/3b051654317f7634/conditions/q/${this.props.latLng[0]},${this.props.latLng[1]}.json`)
         .then(response => response.json())
         .then(weatherInfo => {
           //console.log(response);
-          fetch(`http://api.wunderground.com/api/3b051654317f7634/forecast/q/${nextProps.city.lat},${nextProps.city.lon}.json`)
+          fetch(`http://api.wunderground.com/api/3b051654317f7634/forecast/q/${this.props.latLng[0]},${this.props.latLng[1]}.json`)
             .then(response => response.json())
             .then(forecast => {
               this.setState({ weatherInfo: weatherInfo, forecast: forecast, isDataFetched: true, day: 'today' })
+              this.props.dispatch({type:'CHANGE_LOCATION', lat : this.props.latLng[0], lng: this.props.latLng[1],
+              city : {name: weatherInfo.current_observation.display_location.city,
+                      temp: weatherInfo.current_observation.temp_c,
+                      hum: weatherInfo.current_observation.relative_humidity}
+                    });
             })
         })
     }
+
   }
   componentDidMount() {
-    fetch(`http://api.wunderground.com/api/3b051654317f7634/conditions/q/${this.props.city.lat},${this.props.city.lon}.json`)
+    console.log('Did Mount called')
+    fetch(`http://api.wunderground.com/api/3b051654317f7634/conditions/q/${this.props.lat},${this.props.lng}.json`)
       .then(response => response.json())
       .then(weatherInfo => {
         //console.log(weatherInfo);
-        fetch(`http://api.wunderground.com/api/3b051654317f7634/forecast/q/${this.props.city.lat},${this.props.city.lon}.json`)
+        fetch(`http://api.wunderground.com/api/3b051654317f7634/forecast/q/${this.props.lat},${this.props.lng}.json`)
           .then(response => response.json())
           .then(forecast => {
             //console.log(forecast);
             this.setState({ weatherInfo: weatherInfo, forecast: forecast, isDataFetched: true })
+            if(this.props.lat.toString() !== this.props.latLng[0] && this.props.lng.toString() !== this.props.latLng[1]){
+              this.props.dispatch({type:'CHANGE_LOCATION', lat : this.props.latLng[0], lng: this.props.latLng[1],
+              city : {name: weatherInfo.current_observation.display_location.city,
+                      temp: weatherInfo.current_observation.temp_c,
+                      hum: weatherInfo.current_observation.relative_humidity}
+              });
+              console.log('triggered')
+            }
           })
       })
   }
@@ -150,9 +182,10 @@ class Weather extends Component {
     this.props.updateCordt(event.lngLat);
   }
   render() {
+    //console.log(this.props)
+    console.log('rendered')
     let weather = this.state.weatherInfo;
     let forecast = this.state.forecast;
-    //console.log(forecast)
     let forecast_text = [];
     if (this.state.isDataFetched && forecast.response.error === undefined) {
       //console.log(forecast);
@@ -203,4 +236,8 @@ class Weather extends Component {
   }
 }
 
-export default Weather;
+const mapStateToProps = (state) => {
+  return state;
+}
+
+export default connect(mapStateToProps)(Weather)
